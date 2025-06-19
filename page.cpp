@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
+#include <sstream>
 using namespace std;
 
 class Page {
@@ -12,7 +14,7 @@ private:
     int fault = 0;
 public:
     Page(int n) {
-
+        
         size = n;
         pros = new int[size];
         intime = new int[size];
@@ -76,18 +78,18 @@ public:
             {
                 return i;
             }
-
+       
         }
         return -1;
     }
-    void setAll(int index, int num, int time) {
+    void setAll(int index,int num,int time) {
         if (index >= 0 && index < size) {
             pros[index] = num;
             intime[index] = time;
         }
         else {
             cout << "setAll: 잘못된 인덱스입니다: " << index << endl;
-
+            
         }
     }
     int checkHit(int num) {
@@ -101,11 +103,11 @@ public:
         return -1;
     }
     int Fifo() {
-        int min = intime[0];
+        int min = intime[0]; 
         int mindex = 0;
         for (int i = 0; i < size; i++)
         {
-            if (min > intime[i])
+            if (min > intime[i]) 
             {
                 min = intime[i];
                 mindex = i;
@@ -178,7 +180,7 @@ public:
     }
 };
 
-int countFault(int* hit, int index) {
+int countFault(int* hit,int index) {
     int count = 0;
     for (int i = 0; i < index; i++)
     {
@@ -193,29 +195,29 @@ int list[10000];
 
 int main() {
 
-    int n;
-    ifstream fin;
-    fin.open("page.inp");
-    ofstream fout;
-    fout.open("page.out");
-    string line;
+	int n;
+	ifstream fin;
+	fin.open("page.inp");
+	ofstream fout;
+	fout.open("page.out");
+	string line;
     getline(fin, line);
     n = stoi(line);
     int size = n;
-    int index = 0;
-
-    while (true)
-    {
-        getline(fin, line);
-        n = stoi(line);
+	int index = 0;
+	
+	while (true)
+	{
+		getline(fin, line);
+		n = stoi(line);
         if (n == -1)
             break;
-        list[index] = n;
-
-        index++;
-    }
+		list[index] = n;
+		
+		index++;
+	}
     Page page(size);
-
+    
     for (int i = 0; i < index; i++)
     {
         int tmp = page.isBlank();
@@ -230,28 +232,28 @@ int main() {
                 page.faultUp();
                 page.setAll(tmp, list[i], i);
             }
-
+            
         }
-
+            
         else
         {
             if (page.checkHit(list[i]) != -1)
             {
                 page.hitUp();
             }
-
-            else
+   
+            else 
             {
                 page.faultUp();
                 int tmp2 = page.Fifo();
                 page.setAll(tmp2, list[i], i);
 
             }
-
+            
         }
     }
     int countFifo = page.getFault();
-
+    
     page.pageClear();
 
     for (int i = 0; i < index; i++)
@@ -290,7 +292,7 @@ int main() {
 
         }
     }
-
+    
     int countLRU = page.getFault();
 
     page.pageClear();
@@ -322,7 +324,7 @@ int main() {
             else
             {
                 page.faultUp();
-                page.Opt(i, index, list);
+                page.Opt(i,index,list);
                 int tmp2 = page.Opt();
                 page.setAll(tmp2, list[i], page.getIntime(tmp2));
             }
@@ -342,12 +344,12 @@ int main() {
     line = to_string(countOPT);
     result3 += line;
 
-
+    
     fout.write(result1.c_str(), result1.size());
     fout.write(result2.c_str(), result2.size());
     fout.write(result3.c_str(), result3.size());
 
     fin.close();
     fout.close();
-    return 0;
+	return 0;
 }
